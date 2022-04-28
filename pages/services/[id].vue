@@ -3,7 +3,10 @@
         Service:
         <pre>{{ service }}</pre>
 
-        <NewReview :service-id="service.id" :exists="alreadySubmitted()" />
+        <NewReview v-if="service.id !== user.id" :service-id="service.id" :exists="alreadySubmitted()" />
+        <strong v-else>
+            You can't vote yourself
+        </strong>
     </div>
 </template>
 
