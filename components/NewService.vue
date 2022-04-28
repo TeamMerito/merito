@@ -1,7 +1,7 @@
 <template>
     <div class="flex flex-col space-y-4">
         <p class="font-bold">
-            Add new:
+            Add new service:
         </p>
         <select v-model="newService.type" class="border-1 border-dark-800">
             <option v-for="opt in availableServices" :key="opt">
@@ -11,7 +11,7 @@
         <input v-model="newService.name" type="text" class="border-1 border-dark-800" placeholder="name">
         <input v-model="newService.description" type="text" class="border-1 border-dark-800" placeholder="desc">
 
-        <button class="border-1 border-dark-800 inline" @click="upload()">
+        <button class="border-1 border-dark-800 inline" :disabled="newService.name == '' || newService.desc == ''" @click="upload()">
             upload
         </button>
     </div>
@@ -28,8 +28,7 @@
         id: uuidV4(),
         type: availableServices[0],
         description: "",
-        name: "",
-        stars: 0
+        name: ""
     });
 
     const upload = async() => {

@@ -23,29 +23,16 @@
 
     const client = useSupabaseClient();
 
-    const { data: services } = await useAsyncData("services", async() => {
-        const { data, error } = await client.from("services").select("id, name, description");
+    const { data: services } = await useAsyncData("services", async(): Promise<Service[]> => {
+        try {
+            const { data, error }: { data: Service[]; error: any } = await (await client.from("services").select("id, name, description, reviews(id, userId, stars)").limit(100));
 
-        if (error) {
-            console.error(error);
-            return [];
-        }
-        return data;
-    });
-
-    services.value.forEach(async(service) => {
-        const { data } = await useAsyncData("review", async() => {
-            const { data, error } = await client.from("reviews").select("stars").eq("serviceId", service.id);
-
-            if (error) {
-                console.error(error);
-                return [];
-            }
-
+            if (error)
+                throw error;
             return data;
-        });
-
-        service.stars = data.value.map(review => review.stars);
-        service.average = useAverage(service.stars);
+        } catch (e) {
+            console.error(e);
+            return [] as Service[];
+        }
     });
 </script>

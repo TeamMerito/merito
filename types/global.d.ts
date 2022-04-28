@@ -12,12 +12,11 @@ declare interface Service{
     type: string
     name: string
     description: string
-    stars: number
 }
 
 declare interface Rating{
     id: string
     userId: string
     serviceId: string
-    stars: number
+    stars: number | null
 }
