@@ -17,9 +17,14 @@
                     </NuxtLink>
                 </div>
 
-                <button v-if="user" class="text-white" @click="logout">
-                    Logout
-                </button>
+                <div v-if="user" class="space-x-4">
+                    <NuxtLink to="/profile" class="text-white underline">
+                        Profile
+                    </NuxtLink>
+                    <button class="text-white" @click="logout">
+                        Logout
+                    </button>
+                </div>
                 <div v-else class="space-x-4">
                     <button class="text-white" @click="login('google')">
                         Login with Google
@@ -52,6 +57,5 @@
 
     const logout = async() => {
         await auth.signOut();
-        router.push("/");
     };
 </script>
