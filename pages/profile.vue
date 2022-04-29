@@ -1,9 +1,14 @@
 <template>
     <div>
+        <UserAvatar :src="user.user_metadata.picture" />
+
         <div>
             My statistics: <pre>{{ statistics }}</pre>
         </div>
-        {{ user }}
+        <pre>
+            {{ JSON.stringify(user, null, 2) }}
+        </pre>
+        
     </div>
 </template>
 
