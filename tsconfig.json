@@ -1,9 +1,10 @@
 {
     "extends": "./.nuxt/tsconfig.json",
     "compilerOptions": {
-      "types": ["nuxt-windicss", "@types/uuid"],
+        "strict": true,
+        "types": ["nuxt-windicss", "@types/uuid"],
     },
     "vueCompilerOptions": {
-      "experimentalDisableTemplateSupport": true
-   }
+        "experimentalDisableTemplateSupport": true
+    }
 }

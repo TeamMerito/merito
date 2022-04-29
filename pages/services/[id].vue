@@ -3,7 +3,7 @@
         Service:
         <pre>{{ service }}</pre>
 
-        <NewReview v-if="service.id !== user.id" :service-id="service.id" :exists="alreadySubmitted()" />
+        <NewRating v-if="service.id !== user.id" :service-id="service.id" :exists="alreadySubmitted()" @submitted="refresh()" @updated="refresh()" @deleted="refresh()" />
         <strong v-else>
             You can't vote yourself
         </strong>
@@ -15,13 +15,13 @@
     const client = useSupabaseClient();
     const route = useRoute();
 
-    const { data: service } = await useAsyncData("service", async() => {
-        const { data } = await client.from("services").select("id, name, reviews(userId, stars)").eq("id", route.params.id).single();
+    const { data: service, refresh } = await useAsyncData(`service-${route.params.id}`, async() => {
+        const { data } = await client.from("services").select("id, name, ratings(userId, stars)").eq("id", route.params.id).single();
         return data;
     });
 
     const alreadySubmitted = (): boolean => {
-        if (service.value.reviews.some((review: Rating) => review.userId === user.value.id)) {
+        if (service.value.ratings.some((rating: Rating) => rating.userId === user.value!.id)) {
             return true;
         }
 

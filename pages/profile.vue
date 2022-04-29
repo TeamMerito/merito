@@ -16,7 +16,7 @@
     const client = useSupabaseClient();
 
     const { data: statistics } = await useAsyncData("profile", async() => {
-        const { data, error } = await client.from("services").select("id, name, reviews(userId, stars)").eq("id", user.value.id);
+        const { data, error } = await client.from("services").select("id, name, ratings(userId, stars)").eq("id", user.value!.id);
 
         if (error) {
             console.error("Can't get user statistics", error);

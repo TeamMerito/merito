@@ -12,9 +12,6 @@
                     <NuxtLink to="/ratings" class="text-white underline">
                         Ratings
                     </NuxtLink>
-                    <NuxtLink to="/users" class="text-white underline">
-                        Users
-                    </NuxtLink>
                 </div>
 
                 <div v-if="user" class="space-x-4">
@@ -39,7 +36,6 @@
 </template>
 
 <script setup lang="ts">
-    const router = useRouter();
     const user = useSupabaseUser();
     const { auth } = useSupabaseClient();
 
@@ -51,7 +47,7 @@
                 throw error;
             }
         } catch (e) {
-            console.error("Something went wrong during login:", e.message);
+            console.error("Something went wrong during login:", e);
         }
     };
 

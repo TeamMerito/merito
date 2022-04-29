@@ -14,7 +14,7 @@
     });
 
     const { data: ratings } = await useAsyncData("ratings", async() => {
-        const { data } = await client.from("reviews").select("id, serviceId (name), stars").eq("userId", user.value.id);
+        const { data } = await client.from("ratings").select("id, serviceId (name), stars").eq("userId", user.value!.id);
         return data;
     });
 </script>

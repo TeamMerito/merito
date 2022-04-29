@@ -9,6 +9,7 @@
         "brace-style": ["off"],
         "no-console": ["off"],
         "no-new-func": ["off"],
+        "arrow-parens": ["error", "always"],
         "@typescript-eslint/semi": ["warn", "always"],
         "@typescript-eslint/indent": ["off"],
         "@typescript-eslint/quotes": ["error", "double"],

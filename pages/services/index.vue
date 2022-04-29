@@ -32,46 +32,65 @@
     });
 
     const client = useSupabaseClient();
-    const results = reactive([] as Service[]);
+    const results = ref([] as RatedService[]);
     const kw = ref("");
+    const order = ref("name");
 
-    const { data: services } = await useAsyncData("services", async(): Promise<Service[]> => {
+    const updateServices = (newServices: RatedService[]): void => {
+        results.value = [];
+        results.value.push(...newServices);
+    };
+
+    const { data: services } = await useAsyncData("services", async(): Promise<RatedService[]> => {
         try {
-            const { data, error }: { data: Service[]; error: any } = await client.from("services").select("id, name, description, reviews(id, userId, stars)").limit(100);
+            const { data, error } = await client.from("services").select("id, name, description, ratings(id, userId, stars)").limit(100).order("created_at", { foreignTable: "ratings" });
 
             if (error)
-                throw error;
-            return data;
+                throwError(error.toString());
+            return data as RatedService[];
         } catch (e) {
             console.error(e);
-            return [] as Service[];
+            return [] as RatedService[];
+        }
+    }, {
+        transform: (data: RatedService[]) => {
+            return data.map((service: RatedService) => {
+                return {
+                    id: service.id,
+                    name: service.name,
+                    description: service.description,
+                    ratings: service.ratings,
+                    averageRating: useAverage(service.ratings.map((rating: Rating) => rating.stars)),
+                    totalRatings: service.ratings.length
+                };
+            });
         }
     });
 
-    results.length = 0;
-    results.push(...services.value);
+    updateServices(services.value);
 
     const search = async() => {
-        const term = kw.value.split(" ").map(word => `${word}:*`).join(" | ");
+        const term = useSearchTerm(kw.value);
 
         console.log(`searching ${term}`);
 
-        const { data: services } = await useAsyncData(`search-services-${term}`, async(): Promise<Service[]> => {
+        const { data: services } = await useAsyncData(`search-services-${term}`, async(): Promise<RatedService[]> => {
             try {
-                const { data, error }: { data: Service[]; error: any } = await client.from("services").select("id, name, description, reviews(id, userId, stars)").textSearch("name", `${term}`).limit(100);
+                const { data, error } = await client.from("services").select("id, name, description, ratings(id, userId, stars)").textSearch("name", `${term}`).limit(100);
 
                 if (error)
-                    throw error;
-                return data;
+                    throwError(error.toString());
+                return data as RatedService[];
             } catch (e) {
                 console.error(e);
-                return [] as Service[];
+                return [] as RatedService[];
             }
-        }, { server: false });
+        }, {
+            server: false
+        });
 
         console.log("searched data is ", services.value);
 
-        results.length = 0;
-        results.push(...services.value);
+        updateServices(services.value);
     };
 </script>
