@@ -27,8 +27,6 @@
 </template>
 
 <script lang="ts" setup>
-    import { onBeforeRouteUpdate } from "vue-router";
-
     definePageMeta({
         middleware: ["auth"]
     });

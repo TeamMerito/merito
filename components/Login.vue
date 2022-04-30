@@ -11,8 +11,6 @@
     const runtimeConfig = useRuntimeConfig();
     const { auth } = useSupabaseClient();
 
-    console.log(`will redirect to ${runtimeConfig.public.redirectUrl}`);
-
     const login = async(provider: "google" | "github") => {
         try {
             const { error } = await auth.signIn({
