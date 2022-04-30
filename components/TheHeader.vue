@@ -13,9 +13,19 @@
                 <NuxtLink to="/" class="inline-flex items-center lg:mx-auto">
                     <logo class="w-10 text-accent" />
                 </NuxtLink>
-                <div class="flex items-center hidden ml-auto space-x-8 lg:flex">
+
+                <div v-if="user" class="flex items-center justify-end hidden space-x-8 lg:flex">
+                    <NuxtLink to="/profile" class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400">
+                        Profile
+                    </NuxtLink>
+                    <button class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400" @click="logout">
+                        Logout
+                    </button>
+                </div>
+                <div v-else class="flex items-center hidden ml-auto space-x-8 lg:flex">
                     <button
                         class="btn text-white bg-accent"
+                        @click="login('google')"
                     >
                         Login
                     </button>
@@ -58,6 +68,7 @@
                                 <li class="text-center">
                                     <button
                                         class="btn text-white bg-accent"
+                                        @click="login('google')"
                                     >
                                         Login
                                     </button>
@@ -73,6 +84,28 @@
 
 <script lang="ts" setup>
     const open = ref(false);
+    const user = useSupabaseUser();
+    const { auth } = useSupabaseClient();
+
+    const login = async(provider: "google" | "github") => {
+        try {
+            const { error } = await auth.signIn({
+                provider
+            }, {
+                redirectTo: `${window.location.origin}`
+            });
+
+            if (error) {
+                throw error;
+            }
+        } catch (e) {
+            console.error("Something went wrong during login:", e);
+        }
+    };
+
+    const logout = async() => {
+        await auth.signOut();
+    };
 </script>
 
 <style scoped>
