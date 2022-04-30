@@ -22,5 +22,10 @@ export default defineNuxtConfig({
         htmlAttrs: {
             lang: "en"
         }
+    },
+    runtimeConfig: {
+        public: {
+            redirectUrl: process.env.SUPABASE_REDIRECT
+        }
     }
 });

@@ -8,14 +8,17 @@
 </template>
 
 <script lang="ts" setup>
+    const runtimeConfig = useRuntimeConfig();
     const { auth } = useSupabaseClient();
+
+    console.log(`will redirect to ${runtimeConfig.public.redirectUrl}`);
 
     const login = async(provider: "google" | "github") => {
         try {
             const { error } = await auth.signIn({
                 provider
             }, {
-                redirectTo: `${window.location.origin}`
+                redirectTo: runtimeConfig.public.redirectUrl
             });
 
             if (error) {
