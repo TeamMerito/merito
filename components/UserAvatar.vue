@@ -1,5 +1,5 @@
 <template>
-    <img alt="User avatar" :src="src" />
+    <img alt="User avatar" :src="props.src">
 </template>
 
 <script lang="ts" setup>
@@ -10,7 +10,7 @@
             validator: (value: string) => ["small", "medium", "large"].includes(value)
         },
         src: {
-            type: Boolean,
+            type: String,
             required: true
         }
     });
@@ -22,5 +22,5 @@
         height: 100px;
 
         border-radius: 50%;
-    }    
+    }
 </style>
