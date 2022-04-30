@@ -1,5 +1,12 @@
 <template>
-    <div class="container space-y-10">
+    <div class="container space-y-10 mt-10">
+        <div>
+            <input v-model="kw" type="text" placeholder="search for service">
+            <button class="border-1 border-dark-800" @click="search();">
+                search
+            </button>
+        </div>
+
         <div>
             Services:
 
@@ -15,18 +22,13 @@
             </p>
         </div>
 
-        <div>
-            <input v-model="kw" type="text" placeholder="search for service">
-            <button class="border-1 border-dark-800" @click="search();">
-                search
-            </button>
-        </div>
-
         <NewService />
     </div>
 </template>
 
 <script lang="ts" setup>
+    import { onBeforeRouteUpdate } from "vue-router";
+
     definePageMeta({
         middleware: ["auth"]
     });
@@ -34,7 +36,6 @@
     const client = useSupabaseClient();
     const results = ref([] as RatedService[]);
     const kw = ref("");
-    const order = ref("name");
 
     const updateServices = (newServices: RatedService[]): void => {
         results.value = [];
@@ -64,7 +65,8 @@
                     totalRatings: service.ratings.length
                 };
             });
-        }
+        },
+        initialCache: false
     });
 
     updateServices(services.value);
@@ -88,8 +90,6 @@
         }, {
             server: false
         });
-
-        console.log("searched data is ", services.value);
 
         updateServices(services.value);
     };
