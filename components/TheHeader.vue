@@ -23,12 +23,7 @@
                     </button>
                 </div>
                 <div v-else class="flex items-center hidden ml-auto space-x-8 lg:flex">
-                    <button
-                        class="btn text-white bg-accent"
-                        @click="login('google')"
-                    >
-                        Login
-                    </button>
+                    <Login />
                 </div>
 
                 <button class="lg:hidden p-2 -mr-1 transition duration-200 rounded focus:outline-none focus:shadow-outline hover:bg-deep-purple-50 focus:bg-deep-purple-50" @click="open = true">
@@ -68,7 +63,6 @@
                                 <li class="text-center">
                                     <button
                                         class="btn text-white bg-accent"
-                                        @click="login('google')"
                                     >
                                         Login
                                     </button>
@@ -86,22 +80,6 @@
     const open = ref(false);
     const user = useSupabaseUser();
     const { auth } = useSupabaseClient();
-
-    const login = async(provider: "google" | "github") => {
-        try {
-            const { error } = await auth.signIn({
-                provider
-            }, {
-                redirectTo: `${window.location.origin}`
-            });
-
-            if (error) {
-                throw error;
-            }
-        } catch (e) {
-            console.error("Something went wrong during login:", e);
-        }
-    };
 
     const logout = async() => {
         await auth.signOut();
