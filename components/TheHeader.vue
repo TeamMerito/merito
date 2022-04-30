@@ -13,12 +13,17 @@
                 <NuxtLink to="/" class="inline-flex items-center lg:mx-auto">
                     <logo class="w-10 text-accent" />
                 </NuxtLink>
-                <div class="flex items-center hidden ml-auto space-x-8 lg:flex">
-                    <button
-                        class="btn text-white bg-accent"
-                    >
-                        Login
+
+                <div v-if="user" class="flex items-center justify-end hidden space-x-8 lg:flex">
+                    <NuxtLink to="/profile" class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400">
+                        Profile
+                    </NuxtLink>
+                    <button class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400" @click="logout">
+                        Logout
                     </button>
+                </div>
+                <div v-else class="flex items-center hidden ml-auto space-x-8 lg:flex">
+                    <Login />
                 </div>
 
                 <button class="lg:hidden p-2 -mr-1 transition duration-200 rounded focus:outline-none focus:shadow-outline hover:bg-deep-purple-50 focus:bg-deep-purple-50" @click="open = true">
@@ -73,6 +78,12 @@
 
 <script lang="ts" setup>
     const open = ref(false);
+    const user = useSupabaseUser();
+    const { auth } = useSupabaseClient();
+
+    const logout = async() => {
+        await auth.signOut();
+    };
 </script>
 
 <style scoped>
