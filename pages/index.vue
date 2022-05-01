@@ -1,9 +1,9 @@
 <template>
     <div class="container mt-10">
-        <template v-if="user">
-            User is
-            <pre class="max-h-[50vh] overflow-y-auto border-1 border-dark-800 mt-3">{{ user }}</pre>
-        </template>
+        <div v-if="user">
+            <p>User is</p>
+            <textarea v-model="prettyUser" class="border-1 border-dark-800 w-full" rows="10" />
+        </div>
 
         <p v-else>
             Not logged in
@@ -13,4 +13,5 @@
 
 <script lang="ts" setup>
     const user = useSupabaseUser();
+    const prettyUser = usePrettify(user.value);
 </script>

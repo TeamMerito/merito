@@ -31,5 +31,5 @@
         }
     });
 
-    const prettyUser = computed(() => JSON.stringify(user.value, null, 2));
+    const prettyUser = usePrettify(user.value);
 </script>
