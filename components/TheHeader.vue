@@ -78,11 +78,13 @@
 
 <script lang="ts" setup>
     const open = ref(false);
+    const router = useRouter();
     const user = useSupabaseUser();
     const { auth } = useSupabaseClient();
 
     const logout = async() => {
         await auth.signOut();
+        router.push("/");
     };
 </script>
 
