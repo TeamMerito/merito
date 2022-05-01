@@ -5,9 +5,8 @@
         <div>
             My statistics: <pre>{{ statistics }}</pre>
         </div>
-        <pre>
-            {{ user }}
-        </pre>
+
+        <textarea v-model="prettyUser" class="border-1 border-dark-800" rows="10" />
     </div>
 </template>
 
@@ -20,13 +19,17 @@
     const client = useSupabaseClient();
 
     const { data: statistics } = await useAsyncData("profile", async() => {
-        const { data, error } = await client.from("services").select("id, name, ratings(userId, stars)").eq("id", user.value!.id);
-
-        if (error) {
-            console.error("Can't get user statistics", error);
+        try {
+            const { data, error } = await client.from("services").select("name, ratings(userId, stars)").eq("id", user.value!.id).single();
+            if (error) {
+                throwError(error.message);
+            }
+            return data;
+        } catch (e) {
+            console.error("Can't get user statistics", e);
             return null;
         }
-
-        return data;
     });
+
+    const prettyUser = computed(() => JSON.stringify(user.value, null, 2));
 </script>
