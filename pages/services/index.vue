@@ -70,13 +70,11 @@
     updateServices(services.value);
 
     const search = async() => {
-        const term = useSearchTerm(kw.value);
+        // const term = useSearchTerm(kw.value);
 
-        console.log(`searching ${term}`);
-
-        const { data: services } = await useAsyncData(`search-services-${term}`, async(): Promise<RatedService[]> => {
+        const { data: services } = await useAsyncData("search-services", async(): Promise<RatedService[]> => {
             try {
-                const { data, error } = await client.from("services").select("id, name, description, ratings(id, userId, stars)").textSearch("name", `${term}`).limit(100);
+                const { data, error } = await client.from("services").select("id, name, description, ratings(id, userId, stars)").like("name", `%${kw.value}%`).limit(100);
 
                 if (error)
                     throwError(error.toString());
