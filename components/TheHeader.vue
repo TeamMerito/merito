@@ -9,6 +9,9 @@
                     <NuxtLink to="/ratings" class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400">
                         Ratings
                     </NuxtLink>
+                    <NuxtLink to="/search" class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400">
+                        Search
+                    </NuxtLink>
                 </div>
                 <NuxtLink to="/" class="inline-flex items-center lg:mx-auto">
                     <logo class="w-10 text-accent" />
@@ -78,11 +81,13 @@
 
 <script lang="ts" setup>
     const open = ref(false);
+    const router = useRouter();
     const user = useSupabaseUser();
     const { auth } = useSupabaseClient();
 
     const logout = async() => {
         await auth.signOut();
+        router.push("/");
     };
 </script>
 

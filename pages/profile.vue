@@ -1,13 +1,12 @@
 <template>
-    <div>
+    <div class="container">
         <UserAvatar :src="user.user_metadata.picture" size="medium" />
 
-        <div>
-            My statistics: <pre>{{ statistics }}</pre>
+        <div class="flex">
+            <p>Rated {{ statistics.totalRatings }} times</p>
         </div>
-        <pre>
-            {{ user }}
-        </pre>
+
+        <pre>{{ statistics }}</pre>
     </div>
 </template>
 
@@ -20,13 +19,26 @@
     const client = useSupabaseClient();
 
     const { data: statistics } = await useAsyncData("profile", async() => {
-        const { data, error } = await client.from("services").select("id, name, ratings(userId, stars)").eq("id", user.value!.id);
-
-        if (error) {
-            console.error("Can't get user statistics", error);
+        try {
+            const { data, error } = await client.from("services").select("name, ratings(userId, stars)").eq("id", user.value!.id).single();
+            if (error) {
+                throwError(error.message);
+            }
+            return data;
+        } catch (e) {
+            console.error("Can't get user statistics", e);
             return null;
         }
-
-        return data;
+    }, {
+        transform: (data) => {
+            return {
+                name: data.name,
+                email: user.value!.email,
+                username: user.value!.email?.split("@")[0],
+                ratings: data.ratings,
+                averageRating: useAverage(data.ratings.map((rating: Rating) => rating.stars)),
+                totalRatings: data.ratings.length
+            };
+        }
     });
 </script>
