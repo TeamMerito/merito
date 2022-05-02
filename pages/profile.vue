@@ -1,12 +1,12 @@
 <template>
-    <div>
+    <div class="container">
         <UserAvatar :src="user.user_metadata.picture" size="medium" />
 
-        <div>
-            My statistics: <pre>{{ statistics }}</pre>
+        <div class="flex">
+            <p>Rated {{ statistics.totalRatings }} times</p>
         </div>
 
-        <textarea v-model="prettyUser" class="border-1 border-dark-800" rows="10" />
+        <pre>{{ statistics }}</pre>
     </div>
 </template>
 
@@ -29,7 +29,16 @@
             console.error("Can't get user statistics", e);
             return null;
         }
+    }, {
+        transform: (data) => {
+            return {
+                name: data.name,
+                email: user.value!.email,
+                username: user.value!.email?.split("@")[0],
+                ratings: data.ratings,
+                averageRating: useAverage(data.ratings.map((rating: Rating) => rating.stars)),
+                totalRatings: data.ratings.length
+            };
+        }
     });
-
-    const prettyUser = usePrettify(user.value);
 </script>
