@@ -1,6 +1,6 @@
 <template>
     <div>
-        My ratings:
+        What I rated:
         <pre>{{ ratings }}</pre>
     </div>
 </template>
