@@ -11,20 +11,25 @@
                         <p>{{ user.name }} ({{ user.userName }})</p>
                     </div>
                 </NuxtLink>
+                <div v-if="alreadySearched && results.length === 0 && kw !== ''">
+                    No results found
+                </div>
             </ClientOnly>
         </div>
 
         <ClientOnly>
-            <p>Your search history:</p>
-            <NuxtLink v-for="user in history" :key="`history-${user.id}`" :to="`/services/${user.id}`" class="mt-10">
-                <div class="flex space-x-2">
-                    <UserAvatar :src="user.picture" size="small" />
-                    <p>{{ user.name }} ({{ user.userName }})</p>
-                    <button class="border-1 border-dark-800 w-5 h-5" @click.prevent="removeFromHistory(user)">
-                        X
-                    </button>
-                </div>
-            </NuxtLink>
+            <div v-if="history.length">
+                <p>Your search history:</p>
+                <NuxtLink v-for="user in history" :key="`history-${user.id}`" :to="`/services/${user.id}`" class="mt-10">
+                    <div class="flex space-x-2">
+                        <UserAvatar :src="user.picture" size="small" />
+                        <p>{{ user.name }} ({{ user.userName }})</p>
+                        <button class="border-1 border-dark-800 w-5 h-5" @click.prevent="removeFromHistory(user)">
+                            X
+                        </button>
+                    </div>
+                </NuxtLink>
+            </div>
         </ClientOnly>
     </div>
 </template>
@@ -34,6 +39,7 @@
         middleware: ["auth"]
     });
 
+    const alreadySearched = ref(false);
     const kw = useDebouncedRef("", 300);
     const results = ref<FullUser[]>([]);
     const client = useSupabaseClient();
@@ -70,6 +76,7 @@
         loading.value = pending.value;
         results.value = [];
         results.value.push(...data.value);
+        alreadySearched.value = true;
     };
 
     watch(kw, (newVal) => {
