@@ -1,10 +1,12 @@
 <template>
-    <div class="container">
+    <div class="box">
         <p>Search user:</p>
         <input v-model="kw" type="text" class="border-1 border-dark-800" placeholder="search">
 
         <div class="mt-7">
             <ClientOnly>
+                <pre>{{ pagination }}</pre>
+
                 <NuxtLink v-for="user in results" :key="user.id" :to="user.id === me.id ? '/profile' : `/services/${user.id}`" class="mt-10" @click="user.id !== me.id ? addToHistory(user) : ''">
                     <div class="flex">
                         <UserAvatar :src="user.picture" size="small" />
@@ -46,11 +48,11 @@
     const me = useSupabaseUser();
     const loading = ref(false);
     const { history, addToHistory, removeFromHistory } = useHistory();
+    const pagination = computed(() => useArrayPagination(results, { pageSize: 10 }));
 
     const search = async (term: string) => {
-        console.log(`searching for ${term}`);
         const { data, pending } = await useAsyncData(`search-${term}`, async (): Promise<FullUser[]> => {
-            const { data, error } = await client.from("users").select("id, name, picture, email").ilike("email", `%${term}%`).limit(10);
+            const { data, error } = await client.from("users").select("id, name, picture, email").ilike("email", `%${term}%`).limit(100);
 
             if (error) {
                 console.error("error searching user: ", error);

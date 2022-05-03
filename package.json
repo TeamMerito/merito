@@ -10,12 +10,15 @@
     },
     "devDependencies": {
         "@antfu/eslint-config": "^0.23.0",
+        "@iconify-json/carbon": "^1.1.4",
+        "@iconify-json/fa-solid": "^1.1.1",
         "@nuxtjs/supabase": "^0.1.10",
         "@spada/windicss-plugin-bsgrid": "^0.1.4",
         "@types/uuid": "^8.3.4",
+        "@unocss/nuxt": "^0.32.9",
+        "@vueuse/nuxt": "^8.3.1",
         "eslint": "^8.14.0",
         "nuxt": "3.0.0-rc.2",
-        "nuxt-windicss": "^2.3.1",
         "sass": "^1.51.0"
     },
     "dependencies": {
