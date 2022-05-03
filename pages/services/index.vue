@@ -1,5 +1,5 @@
 <template>
-    <div class="container space-y-10 mt-10">
+    <div class="box space-y-10 mt-10">
         <div>
             <input v-model="kw" type="text" placeholder="search for service">
             <button class="border-1 border-dark-800" @click="search();">

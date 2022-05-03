@@ -1,11 +1,38 @@
 import { defineNuxtConfig } from "nuxt";
 
 export default defineNuxtConfig({
-    modules: ["@nuxtjs/supabase", "nuxt-windicss"],
-	css: ["virtual:windi.css"],
+    modules: ["@vueuse/nuxt", "@nuxtjs/supabase", "@unocss/nuxt"],
     supabase: {
         client: {
             persistSession: true
+        }
+    },
+    unocss: {
+        wind: true,
+        icons: true,
+        preflight: true,
+        shortcuts: [
+            ["btn", "whitespace-nowrap items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium"],
+            ["box", "container mx-auto"]
+        ],
+        theme: {
+            colors: {
+                accent: "#FB8500"
+            },
+            breakpoints: {
+                sm: "576px",
+                md: "768px",
+                lg: "992px",
+                xl: "1200px",
+                xxl: "1400px",
+                ultrawide: "2000px"
+            }
+        },
+        webFonts: {
+            fonts: {
+                heading: "Montserrat",
+                sans: "Inter"
+            }
         }
     },
     meta: {

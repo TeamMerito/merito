@@ -11,7 +11,7 @@
     const runtimeConfig = useRuntimeConfig();
     const { auth } = useSupabaseClient();
 
-    const login = async(provider: "google" | "github") => {
+    const login = async (provider: "google" | "github") => {
         try {
             const { error } = await auth.signIn({
                 provider
@@ -20,7 +20,7 @@
             });
 
             if (error) {
-                throw error;
+                throwError(error.toString());
             }
         } catch (e) {
             console.error("Something went wrong during login:", e);

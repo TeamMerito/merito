@@ -1,5 +1,5 @@
 {
-	"extends": ["@antfu"],
+	"extends": "@antfu",
     "rules": {
         "no-tabs": ["off"],
         "quotes": ["off"],
@@ -10,6 +10,7 @@
         "no-console": ["off"],
         "no-new-func": ["off"],
         "arrow-parens": ["error", "always"],
+        "antfu/import-dedupe": ["off"],
         "@typescript-eslint/semi": ["warn", "always"],
         "@typescript-eslint/indent": ["off"],
         "@typescript-eslint/quotes": ["error", "double"],
@@ -23,6 +24,6 @@
         }],
         "vue/component-tags-order": ["error", {
             "order": ["template", "script", "style"]
-        }]
+        }]        
     }
 }

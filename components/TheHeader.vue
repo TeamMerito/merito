@@ -1,8 +1,8 @@
 <template>
-    <nav class="shadow-md">
-        <div class="container py-5">
+    <nav class="font-heading shadow-md">
+        <div class="box py-5">
             <div class="relative flex lg:grid items-center grid-cols-2 lg:grid-cols-3 justify-between">
-                <div class="flex items-center hidden space-x-8 lg:flex">
+                <div class="items-center hidden space-x-8 lg:flex">
                     <NuxtLink to="/services" class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400">
                         Services
                     </NuxtLink>
@@ -12,12 +12,15 @@
                     <NuxtLink to="/search" class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400">
                         Search
                     </NuxtLink>
+                    <NuxtLink to="/admin" class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400">
+                        Admin
+                    </NuxtLink>
                 </div>
                 <NuxtLink to="/" class="inline-flex items-center lg:mx-auto">
                     <logo class="w-10 text-accent" />
                 </NuxtLink>
 
-                <div v-if="user" class="flex items-center justify-end hidden space-x-8 lg:flex">
+                <div v-if="user" class="items-center justify-end hidden space-x-8 lg:flex">
                     <NuxtLink to="/profile" class="font-medium tracking-wide text-gray-700 transition-colors duration-200 hover:text-deep-purple-accent-400">
                         Profile
                     </NuxtLink>
@@ -25,16 +28,12 @@
                         Logout
                     </button>
                 </div>
-                <div v-else class="flex items-center hidden ml-auto space-x-8 lg:flex">
+                <div v-else class="items-center hidden ml-auto space-x-8 lg:flex">
                     <Login />
                 </div>
 
                 <button class="lg:hidden p-2 -mr-1 transition duration-200 rounded focus:outline-none focus:shadow-outline hover:bg-deep-purple-50 focus:bg-deep-purple-50" @click="open = true">
-                    <svg class="w-5 text-gray-600" viewBox="0 0 24 24">
-                        <path fill="currentColor" d="M23,13H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,13,23,13z" />
-                        <path fill="currentColor" d="M23,6H1C0.4,6,0,5.6,0,5s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,6,23,6z" />
-                        <path fill="currentColor" d="M23,20H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h22c0.6,0,1,0.4,1,1S23.6,20,23,20z" />
-                    </svg>
+                    <div class="i-fa-solid-bars text-dark-600" />
                 </button>
             </div>
 
@@ -85,14 +84,8 @@
     const user = useSupabaseUser();
     const { auth } = useSupabaseClient();
 
-    const logout = async() => {
+    const logout = async () => {
         await auth.signOut();
         router.push("/");
     };
 </script>
-
-<style scoped>
-    .router-link-active{
-        @apply text-gray-800;
-    }
-</style>

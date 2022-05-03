@@ -1,24 +1,26 @@
 <template>
-    <div class="container">
+    <div class="box">
         <p>Search user:</p>
-        <input v-model="kw" type="text" class="border-1 border-dark-800" placeholder="search" @keyup.enter="search()">
-        <button class="border-1 border-dark-800" @click="search()">
-            search
-        </button>
+        <input v-model="kw" type="text" class="border-1 border-dark-800" placeholder="search">
 
         <div class="mt-7">
             <ClientOnly>
+                <pre>{{ pagination }}</pre>
+
                 <NuxtLink v-for="user in results" :key="user.id" :to="user.id === me.id ? '/profile' : `/services/${user.id}`" class="mt-10" @click="user.id !== me.id ? addToHistory(user) : ''">
                     <div class="flex">
                         <UserAvatar :src="user.picture" size="small" />
                         <p>{{ user.name }} ({{ user.userName }})</p>
                     </div>
                 </NuxtLink>
+                <div v-if="alreadySearched && results.length === 0 && kw !== ''">
+                    No results found
+                </div>
             </ClientOnly>
         </div>
 
-        <div v-if="history.length">
-            <ClientOnly>
+        <ClientOnly>
+            <div v-if="history.length">
                 <p>Your search history:</p>
                 <NuxtLink v-for="user in history" :key="`history-${user.id}`" :to="`/services/${user.id}`" class="mt-10">
                     <div class="flex space-x-2">
@@ -29,8 +31,8 @@
                         </button>
                     </div>
                 </NuxtLink>
-            </ClientOnly>
-        </div>
+            </div>
+        </ClientOnly>
     </div>
 </template>
 
@@ -39,15 +41,18 @@
         middleware: ["auth"]
     });
 
-    const kw = ref("");
+    const alreadySearched = ref(false);
+    const kw = useDebouncedRef("", 300);
     const results = ref<FullUser[]>([]);
     const client = useSupabaseClient();
     const me = useSupabaseUser();
+    const loading = ref(false);
     const { history, addToHistory, removeFromHistory } = useHistory();
+    const pagination = computed(() => useArrayPagination(results, { pageSize: 10 }));
 
-    const search = async() => {
-        const { data } = await useAsyncData(`search-${kw.value}`, async(): Promise<FullUser[]> => {
-            const { data, error } = await client.from("users").select("id, name, picture, email").ilike("email", `%${kw.value}%`).limit(10);
+    const search = async (term: string) => {
+        const { data, pending } = await useAsyncData(`search-${term}`, async (): Promise<FullUser[]> => {
+            const { data, error } = await client.from("users").select("id, name, picture, email").ilike("email", `%${term}%`).limit(100);
 
             if (error) {
                 console.error("error searching user: ", error);
@@ -70,7 +75,17 @@
             }
         });
 
+        loading.value = pending.value;
         results.value = [];
         results.value.push(...data.value);
+        alreadySearched.value = true;
     };
+
+    watch(kw, (newVal) => {
+        if (newVal !== "") {
+            search(newVal);
+        } else {
+            results.value = [];
+        }
+    });
 </script>
