@@ -1,5 +1,5 @@
 <template>
-    <div class="box mt-10">
+    <div class="container mt-10">
         <div v-if="user">
             <p>User is</p>
             <textarea v-model="prettyUser" class="border-1 border-dark-800 w-full" rows="10" />

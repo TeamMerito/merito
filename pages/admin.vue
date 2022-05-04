@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="container">
         <p>Super secret admin page</p>
     </div>
 </template>

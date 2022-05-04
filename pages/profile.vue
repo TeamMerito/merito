@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="container">
         <UserAvatar :src="user.user_metadata.picture" size="medium" />
 
         <div class="flex">

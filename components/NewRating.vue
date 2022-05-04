@@ -1,5 +1,5 @@
 <template>
-    <div class="box flex flex-col space-y-4">
+    <div class="container flex flex-col space-y-4">
         <p class="font-bold">
             Add or update rating for {{ props.serviceId }}:
         </p>
