@@ -6,6 +6,8 @@
             <p>Rated {{ statistics.totalRatings }} times</p>
         </div>
 
+        <StarRating :value="statistics.averageRating" :static="true" />
+
         <pre>{{ statistics }}</pre>
     </div>
 </template>

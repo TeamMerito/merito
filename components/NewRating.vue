@@ -4,10 +4,10 @@
             Add or update rating for {{ props.service.name }}:
         </p>
 
-        <StarRating :key="myRating" :value="myRating" @selected="setStars" />
-
         <div class="flex space-x-4">
-            <button v-if="exists" class="border-1 border-dark-800 inline" @click="remove()">
+            <StarRating :stars="myRating" @selected="setStars" />
+
+            <button v-if="exists" class="border-1 border-dark-800 inline px-3" @click="remove()">
                 delete
             </button>
         </div>
@@ -29,9 +29,9 @@
 
     const emit = defineEmits(["submitted", "updated", "deleted"]);
 
+    const router = useRouter();
     const user = useSupabaseUser();
     const client = useSupabaseClient();
-    const router = useRouter();
 
     const myRating = ref(props.service.ratings.find((review: Rating) => review.userId === user.value!.id)?.stars ?? 0);
 
@@ -77,14 +77,18 @@
 
     const remove = async () => {
         if (confirm("Are you sure to delete this rating?")) {
-            const { data, error } = await client.from("ratings").delete().match({ serviceId: props.service.id, userId: user.value!.id });
+            try {
+                const { data, error } = await client.from("ratings").delete().match({ serviceId: props.service.id, userId: user.value!.id });
 
-            if (error) {
-                console.error("Error updating rating", error);
-            } else {
+                if (error) {
+                    throwError(error.toString());
+                }
+
                 console.log("Rating deleted", data);
                 emit("deleted");
                 router.push("/services");
+            } catch (e) {
+                console.error("Error updating rating", e);
             }
         }
     };

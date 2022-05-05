@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img alt="User avatar" :src="props.src" :class="getAvatarSize(props.size)">
+        <img alt="User avatar" :src="props.src" :class="getAvatarSize(props.size)" referrerpolicy="no-referrer">
     </div>
 </template>
 

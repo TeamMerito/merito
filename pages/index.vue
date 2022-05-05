@@ -13,5 +13,5 @@
 
 <script lang="ts" setup>
     const user = useSupabaseUser();
-    const prettyUser = usePrettify(user.value);
+    const prettyUser = computed(() => usePrettify(user.value));
 </script>
