@@ -1,14 +1,12 @@
 <template>
     <div class="container flex flex-col space-y-4">
         <p class="font-bold">
-            Add or update rating for {{ props.serviceId }}:
+            Add or update rating for {{ props.service.name }}:
         </p>
-        <input v-model="newRating.stars" type="number" min="1" max="5" class="border-1 border-dark-800" placeholder="stars">
+
+        <StarRating :key="myRating" :value="myRating" @selected="setStars" />
 
         <div class="flex space-x-4">
-            <button class="border-1 border-dark-800 inline" :disabled="!newRating.stars" :class="{ 'cursor-not-allowed': !newRating.stars }" @click="exists ? update() : post()">
-                {{ exists ? "update" : "post" }}
-            </button>
             <button v-if="exists" class="border-1 border-dark-800 inline" @click="remove()">
                 delete
             </button>
@@ -18,10 +16,9 @@
 
 <script lang="ts" setup>
     import { v4 as uuidV4 } from "uuid";
-
     const props = defineProps({
-        serviceId: {
-            type: String,
+        service: {
+            type: Object,
             required: true
         },
         exists: {
@@ -34,11 +31,14 @@
 
     const user = useSupabaseUser();
     const client = useSupabaseClient();
+    const router = useRouter();
+
+    const myRating = ref(props.service.ratings.find((review: Rating) => review.userId === user.value!.id)?.stars ?? 0);
 
     const newRating = reactive<Rating>({
         id: uuidV4(),
         userId: user.value!.id,
-        serviceId: props.serviceId,
+        serviceId: props.service.id,
         stars: null
     });
 
@@ -57,7 +57,7 @@
     const update = async () => {
         const { error } = await client.from("ratings").update({ stars: newRating.stars }).match({
             userId: user.value!.id,
-            serviceId: props.serviceId
+            serviceId: props.service.id
         });
 
         if (error) {
@@ -69,15 +69,22 @@
         }
     };
 
+    const setStars = (stars: number) => {
+        newRating.stars = stars;
+
+        props.exists ? update() : post();
+    };
+
     const remove = async () => {
         if (confirm("Are you sure to delete this rating?")) {
-            const { data, error } = await client.from("ratings").delete().match({ serviceId: props.serviceId, userId: user.value!.id });
+            const { data, error } = await client.from("ratings").delete().match({ serviceId: props.service.id, userId: user.value!.id });
 
             if (error) {
                 console.error("Error updating rating", error);
             } else {
                 console.log("Rating deleted", data);
                 emit("deleted");
+                router.push("/services");
             }
         }
     };

@@ -11,7 +11,7 @@
         <input v-model="newService.name" type="text" class="border-1 border-dark-800" placeholder="name">
         <input v-model="newService.description" type="text" class="border-1 border-dark-800" placeholder="desc">
 
-        <button class="border-1 border-dark-800 inline" :disabled="newService.name == '' || newService.desc == ''" @click="upload()">
+        <button class="border-1 border-dark-800 inline" :disabled="newService.name === '' || newService.desc === ''" @click="upload()">
             upload
         </button>
     </div>
@@ -31,7 +31,7 @@
         name: ""
     });
 
-    const upload = async() => {
+    const upload = async () => {
         const { data, error } = await client.from("services").insert([newService]);
 
         if (error) {
