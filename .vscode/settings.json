@@ -11,6 +11,6 @@
     "explorer.experimental.fileNesting.patterns": {
         "package.json": "package*",
         "readme.md": "*.md",
-        ".gitignore": ".git*, .eslint*",
+        ".gitignore": ".git*, .eslint*"
     }
 }

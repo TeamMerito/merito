@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="container">
         <UserAvatar :src="user.user_metadata.picture" size="medium" />
 
         <div class="flex">
@@ -18,7 +18,7 @@
     const user = useSupabaseUser();
     const client = useSupabaseClient();
 
-    const { data: statistics } = await useAsyncData("profile", async() => {
+    const { data: statistics } = await useAsyncData("profile", async () => {
         try {
             const { data, error } = await client.from("services").select("name, ratings(userId, stars)").eq("id", user.value!.id).single();
             if (error) {

@@ -1,4 +1,5 @@
 import { defineNuxtConfig } from "nuxt";
+import transformerDirective from "@unocss/transformer-directives";
 
 export default defineNuxtConfig({
     modules: ["@vueuse/nuxt", "@nuxtjs/supabase", "@unocss/nuxt"],
@@ -11,9 +12,9 @@ export default defineNuxtConfig({
         wind: true,
         icons: true,
         preflight: true,
+        attributify: true,
         shortcuts: [
-            ["btn", "whitespace-nowrap items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium"],
-            ["box", "container mx-auto"]
+            ["btn", "whitespace-nowrap items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium"]
         ],
         theme: {
             colors: {
@@ -33,7 +34,10 @@ export default defineNuxtConfig({
                 heading: "Montserrat",
                 sans: "Inter"
             }
-        }
+        },
+        transformers: [
+            transformerDirective()
+        ]
     },
     meta: {
         title: "Merito",

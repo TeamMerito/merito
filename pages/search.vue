@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div class="container">
         <p>Search user:</p>
         <input v-model="kw" type="text" class="border-1 border-dark-800" placeholder="search">
 

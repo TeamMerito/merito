@@ -1,12 +1,17 @@
 {
     "version": "0.0.1",
-    "author": "Nicola Spadari",
     "private": true,
+    "author": "Nicola Spadari",
     "scripts": {
         "build": "nuxt build",
         "dev": "nuxt dev",
         "generate": "nuxt generate",
-        "preview": "nuxt preview"
+        "preview": "nuxt preview",
+        "lint": "eslint --fix --ext .js,.ts,.json,.vue,.svg ."
+    },
+    "dependencies": {
+        "uuid": "^8.3.2",
+        "zod": "^3.14.4"
     },
     "devDependencies": {
         "@antfu/eslint-config": "^0.23.0",
@@ -20,9 +25,5 @@
         "eslint": "^8.14.0",
         "nuxt": "3.0.0-rc.2",
         "sass": "^1.51.0"
-    },
-    "dependencies": {
-        "uuid": "^8.3.2",
-        "zod": "^3.14.4"
     }
 }
