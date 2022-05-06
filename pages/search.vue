@@ -5,9 +5,12 @@
 
         <div class="mt-7">
             <ClientOnly>
-                <pre>{{ pagination }}</pre>
-
-                <NuxtLink v-for="user in results" :key="user.id" :to="user.id === me.id ? '/profile' : `/services/${user.id}`" class="mt-10" @click="user.id !== me.id ? addToHistory(user) : ''">
+                <p>currentPage: {{ currentPage }}</p>
+                <p>totalItems: {{ totalItems }}</p>
+                <p>pages: {{ pages }}</p>
+                <pre>result: {{ result }}</pre>
+                
+                <NuxtLink v-for="user in result" :key="user.id" :to="user.id === me.id ? '/profile' : `/services/${user.id}`" class="mt-10" @click="user.id !== me.id ? addToHistory(user) : ''">
                     <div class="flex">
                         <UserAvatar :src="user.picture" size="small" />
                         <p>{{ user.name }} ({{ user.userName }})</p>
@@ -15,6 +18,19 @@
                 </NuxtLink>
                 <div v-if="alreadySearched && results.length === 0 && kw !== ''">
                     No results found
+                </div>
+                <div class="inline-flex justify-center space-x-1">
+                    <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="currentPage !== 1 ? prev() : ''">
+                        <div class="i-fa-solid-chevron-left w-3 h-3 text-dark" />
+                    </button>
+
+                    <div class="inline-flex w-8 h-8 leading-8 mx-auto text-white bg-blue-600 border-blue-600 rounded">
+                        {{ currentPage }}
+                    </div>
+
+                    <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="currentPage !== pages ? next() : ''">
+                        <div class="i-fa-solid-chevron-right w-3 h-3 text-dark" />
+                    </button>
                 </div>
             </ClientOnly>
         </div>
@@ -48,7 +64,7 @@
     const me = useSupabaseUser();
     const loading = ref(false);
     const { history, addToHistory, removeFromHistory } = useHistory();
-    const pagination = computed(() => useArrayPagination(results, { pageSize: 10 }));
+    const { result, currentPage, totalItems, pages, prev, next } = usePagination(results, 5);
 
     const search = async (term: string) => {
         const { data, pending } = await useAsyncData(`search-${term}`, async (): Promise<FullUser[]> => {
