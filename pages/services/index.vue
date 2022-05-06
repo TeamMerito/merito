@@ -5,13 +5,9 @@
 
         <div class="mt-7">
             <ClientOnly>
-                <p>currentPage: {{ currentPage }}</p>
-                <p>totalItems: {{ totalItems }}</p>
-                <p>pages: {{ pages }}</p>
-                <pre>result: {{ result }}</pre>
-
+                ({{ totalItems }} found)
                 <div class="flex flex-col space-y-3">
-                    <NuxtLink v-for="serv in results" :key="serv.id" :to="`/services/${serv.id}`" class="mt-10">
+                    <NuxtLink v-for="serv in result" :key="serv.id" :to="`/services/${serv.id}`" class="mt-10">
                         {{ serv.name }} {{ serv.averageRating !== null ? `(${serv.averageRating} stars)` : '- not rated yet' }}
                     </NuxtLink>
                 </div>
@@ -31,6 +27,8 @@
                     <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="currentPage !== pages ? next() : ''">
                         <div class="i-fa-solid-chevron-right w-3 h-3 text-dark" />
                     </button>
+
+                    Page {{ currentPage }} of {{ pages }}
                 </div>
             </ClientOnly>
         </div>

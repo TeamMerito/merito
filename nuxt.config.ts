@@ -20,6 +20,9 @@ export default defineNuxtConfig({
             colors: {
                 accent: "#FB8500"
             },
+            animation: {
+                "spin-slow": "spin 3s linear infinite"
+            },
             breakpoints: {
                 sm: "576px",
                 md: "768px",
@@ -31,8 +34,14 @@ export default defineNuxtConfig({
         },
         webFonts: {
             fonts: {
-                heading: "Montserrat",
-                sans: "Inter"
+                heading: {
+                    name: "Montserrat",
+                    weights: ["400", "700"]
+                },
+                sans: {
+                    name: "DM Sans",
+                    weights: ["400", "700"]
+                }
             }
         },
         transformers: [

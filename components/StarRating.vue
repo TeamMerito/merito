@@ -2,7 +2,7 @@
     <div class="star-rating flex">
         <label v-for="star in maxStars" :key="`star-${star}`" class="p-2" :class="props.static ? 'cursor-default' : 'cursor-pointer'" @click.once="select(star)" @mouseover="starOver(star)" @mouseout="starOut()">
             <input v-model="val" class="hidden" type="radio" :value="star" :disabled="props.static">
-            <div class="i-fa-solid-star w-5 h-5 transition-colors" :class="val >= star ? 'text-yellow-300' : 'text-gray-400'" />
+            <div class="i-fa-solid-star w-5 h-5 transition-colors" :class="val >= star ? 'text-yellow-400' : 'text-gray-400'" />
         </label>
     </div>
 </template>

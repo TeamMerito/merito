@@ -1,5 +1,5 @@
 {
-    "version": "0.0.1",
+    "version": "0.1.0",
     "private": true,
     "author": "Nicola Spadari",
     "scripts": {
@@ -15,10 +15,10 @@
     },
     "devDependencies": {
         "@antfu/eslint-config": "^0.23.0",
-        "@iconify-json/carbon": "^1.1.4",
+        "@iconify-json/fa-brands": "^1.1.1",
+        "@iconify-json/fa-regular": "^1.1.1",
         "@iconify-json/fa-solid": "^1.1.1",
         "@nuxtjs/supabase": "^0.1.10",
-        "@spada/windicss-plugin-bsgrid": "^0.1.4",
         "@types/uuid": "^8.3.4",
         "@unocss/nuxt": "^0.32.9",
         "@vueuse/nuxt": "^8.3.1",
