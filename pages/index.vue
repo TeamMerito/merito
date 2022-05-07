@@ -1,7 +1,7 @@
 <template>
     <aside class="p-12 sm:p-16 lg:p-24">
         <div class="max-w-3xl mx-auto text-center">
-            <div class="flex space-x-4 max-w-2/5 justify-center items-end mx-auto">
+            <div class="flex space-x-4 max-w-2/5 justify-center items-end mx-auto" :style="parallax">
                 <div class="i-fa-solid-star w-7 h-7 text-yellow-300" />
                 <div class="i-fa-solid-star w-25 h-15 text-orange-300 animate-pulse" />
                 <div class="i-fa-solid-star w-7 h-7 text-yellow-300" />
@@ -31,6 +31,11 @@
     const runtimeConfig = useRuntimeConfig();
     const { auth } = useSupabaseClient();
     const router = useRouter();
+    const { x, y } = useMouse({ touch: false });
+
+    const parallax = computed(() => ({
+        transform: `translateX(${x.value / 90}px) translateY(-${y.value / 90}px)`
+    }));
 
     const login = async (provider: "google" | "github") => {
         try {

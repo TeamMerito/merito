@@ -1,72 +1,41 @@
 <template>
-    <div container class="space-y-4">
-        <details class="p-6 rounded-lg bg-gray-50 group" open>
-            <summary class="flex items-center justify-between cursor-pointer">
-                <h5 class="font-medium text-gray-900">
-                    Lorem ipsum dolor sit amet consectetur adipisicing?
+    <NuxtLayout name="contained">
+        <div class="space-y-4">
+            <div v-for="(question, index) in questions" :key="index">
+                <details class="p-6 rounded-lg bg-gray-50 group">
+                    <summary class="flex items-center justify-between cursor-pointer">
+                        <h5 class="font-medium text-gray-900">
+                            {{ question.title }}
+                        </h5>
 
-                    <div class="i-fa-regular-plus w-5 h-5" />
-                </h5>
+                        <span class="relative flex-shrink-0 ml-1.5 w-5 h-5">
+                            <div class="i-heroicons-outline-plus-circle absolute inset-0 w-5 h-5 opacity-100 group-open:opacity-0" />
+                            <div class="i-heroicons-outline-minus-circle absolute inset-0 w-5 h-5 opacity-100 group-open:opacity-100" />
+                        </span>
+                    </summary>
 
-                <span class="relative flex-shrink-0 ml-1.5 w-5 h-5">
-                    <div class="i-fa-regular-plus absolute inset-0 w-5 h-5 opacity-100 group-open:opacity-0" />
-                    <div class="i-fa-regular-minus absolute inset-0 w-5 h-5 opacity-100 group-open:opacity-100" />
-                </span>
-            </summary>
-
-            <p class="mt-4 leading-relaxed text-gray-700">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab hic veritatis
-                molestias culpa in, recusandae laboriosam neque aliquid libero nesciunt
-                voluptate dicta quo officiis explicabo consequuntur distinctio corporis
-                earum similique!
-            </p>
-        </details>
-
-        <details class="p-6 rounded-lg bg-gray-50 group">
-            <summary class="flex items-center justify-between cursor-pointer">
-                <h5 class="font-medium text-gray-900">
-                    Lorem ipsum dolor sit amet consectetur adipisicing?
-                </h5>
-
-                <span class="relative flex-shrink-0 ml-1.5 w-5 h-5">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="absolute inset-0 opacity-100 group-open:opacity-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="absolute inset-0 opacity-0 group-open:opacity-100"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                    </svg>
-                </span>
-            </summary>
-
-            <p class="mt-4 leading-relaxed text-gray-700">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab hic veritatis
-                molestias culpa in, recusandae laboriosam neque aliquid libero nesciunt
-                voluptate dicta quo officiis explicabo consequuntur distinctio corporis
-                earum similique!
-            </p>
-        </details>
-    </div>
+                    <p class="mt-4 leading-relaxed text-gray-700">
+                        {{ question.content }}
+                    </p>
+                </details>
+            </div>
+        </div>
+    </NuxtLayout>
 </template>
+
+<script lang="ts" setup>
+    const questions = [
+        {
+            title: "Lorem ipsum dolor sit amet consectetur adipisicing?",
+            content: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab hic veritatis molestias culpa in, recusandae laboriosam neque aliquid libero nesciunt voluptate dicta quo officiis explicabo consequuntur distinctio corporis earum similique!"
+        },
+        {
+            title: "Lorem ipsum dolor sit amet consectetur adipisicing 2?",
+            content: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab hic veritatis molestias culpa in, recusandae laboriosam neque aliquid libero nesciunt voluptate dicta quo officiis explicabo consequuntur distinctio corporis earum similique 2!"
+        },
+        {
+            title: "Lorem ipsum dolor sit amet consectetur adipisicing 3?",
+            content: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ab hic veritatis molestias culpa in, recusandae laboriosam neque aliquid libero nesciunt voluptate dicta quo officiis explicabo consequuntur distinctio corporis earum similique 3!"
+        }
+    ];
+</script>

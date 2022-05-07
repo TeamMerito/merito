@@ -11,18 +11,18 @@
     },
     "dependencies": {
         "uuid": "^8.3.2",
-        "zod": "^3.14.4"
+        "zod": "^3.15.1"
     },
     "devDependencies": {
         "@antfu/eslint-config": "^0.23.0",
         "@iconify-json/fa-brands": "^1.1.1",
-        "@iconify-json/fa-regular": "^1.1.1",
         "@iconify-json/fa-solid": "^1.1.1",
-        "@nuxtjs/supabase": "^0.1.10",
+        "@iconify-json/heroicons-outline": "^1.1.1",
+        "@nuxtjs/supabase": "^0.1.11",
         "@types/uuid": "^8.3.4",
-        "@unocss/nuxt": "^0.32.9",
-        "@vueuse/nuxt": "^8.3.1",
-        "eslint": "^8.14.0",
+        "@unocss/nuxt": "^0.32.13",
+        "@vueuse/nuxt": "^8.4.2",
+        "eslint": "^8.15.0",
         "nuxt": "3.0.0-rc.2",
         "sass": "^1.51.0"
     }

@@ -1,55 +1,101 @@
 <template>
-    <div class="container">
-        <p>Search user:</p>
-        <input v-model="kw" type="text" class="border-1 border-dark-800" placeholder="search">
+    <NuxtLayout name="contained">
+        <div class="max-w-3xl mx-auto">
+            <div class="relative">
+                <label class="sr-only" for="username"> Username </label>
 
-        <div class="mt-7">
-            <ClientOnly>
-                <p>currentPage: {{ currentPage }}</p>
-                <p>totalItems: {{ totalItems }}</p>
-                <p>pages: {{ pages }}</p>
-                <pre>result: {{ result }}</pre>
-                
-                <NuxtLink v-for="user in result" :key="user.id" :to="user.id === me.id ? '/profile' : `/services/${user.id}`" class="mt-10" @click="user.id !== me.id ? addToHistory(user) : ''">
-                    <div class="flex">
-                        <UserAvatar :src="user.picture" size="small" />
-                        <p>{{ user.name }} ({{ user.userName }})</p>
-                    </div>
-                </NuxtLink>
-                <div v-if="alreadySearched && results.length === 0 && kw !== ''">
-                    No results found
+                <span class="absolute text-gray-500 -translate-y-1/2 pointer-events-none top-1/2 left-4">
+                    <div class="i-heroicons-outline-at-symbol w-5 h-5" />
+                </span>
+
+                <input
+                    id="username"
+                    v-model="kw"
+                    class="w-full py-3 pl-12 pr-3 text-sm border-2 border-gray-200 rounded"
+                    type="text"
+                    placeholder="Username"
+                >
+            </div>
+
+            <p v-if="alreadySearched && kw.value !== ''" class="text-right mt-3 mb-1">
+                {{ totalItems }} results found
+            </p>
+
+            <div class="space-y-1">
+                <div v-for="user in result" :key="user.id">
+                    <NuxtLink :to="user.id === me.id ? '/profile' : `/services/${user.id}`" class="flex items-center justify-between p-4 text-sm font-medium transition-colors border border-gray-100 rounded-lg shadow-sm cursor-pointer hover:bg-gray-50" @click="addToHistory(user)">
+                        <div class="flex items-center space-x-2">
+                            <UserAvatar :src="user.picture" size="small" />
+                            <div>
+                                <p>{{ user.name }}</p>
+                                <p class="text-gray-400">
+                                    ({{ user.userName }})
+                                </p>
+                            </div>
+                        </div>
+
+                        <span>
+                            <div class="i-heroicons-outline-arrow-narrow-right text-gray-500 w-6 h-6" />
+                        </span>
+                    </NuxtLink>
                 </div>
-                <div class="inline-flex justify-center space-x-1">
-                    <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="currentPage !== 1 ? prev() : ''">
-                        <div class="i-fa-solid-chevron-left w-3 h-3 text-dark" />
-                    </button>
+            </div>
 
-                    <div class="inline-flex w-8 h-8 leading-8 mx-auto text-white bg-blue-600 border-blue-600 rounded">
-                        {{ currentPage }}
+            <div v-if="pages !== 0" class="flex justify-center mt-7">
+                <ClientOnly>
+                    <div class="inline-flex items-center justify-center space-x-3">
+                        <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="prev()">
+                            <div class="i-heroicons-outline-chevron-left w-3 h-3" />
+                        </button>
+
+                        <p class="text-xs">
+                            {{ currentPage }}
+                            <span class="mx-0.25">/</span>
+                            {{ pages }}
+                        </p>
+
+                        <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="next()">
+                            <div class="i-heroicons-outline-chevron-right w-3 h-3" />
+                        </button>
+                    </div>
+                </ClientOnly>
+            </div>
+
+            <ClientOnly>
+                <div v-if="history.length">
+                    <div class="flex justify-between mt-5 mb-3 px-1">
+                        <p>
+                            Your search history
+                        </p>
+
+                        <button class="px-4 py-2 text-sm font-medium text-orange-600 rounded bg-orange-50" @click="cleanAll()">
+                            Clean all
+                        </button>
                     </div>
 
-                    <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="currentPage !== pages ? next() : ''">
-                        <div class="i-fa-solid-chevron-right w-3 h-3 text-dark" />
-                    </button>
+                    <div v-for="user in history" :key="`history-${user.id}`">
+                        <NuxtLink :to="`/services/${user.id}`" class="flex items-center justify-between p-4 text-sm font-medium transition-colors border border-gray-100 rounded-lg shadow-sm cursor-pointer hover:bg-gray-50" @click="addToHistory(user)">
+                            <div class="flex items-center space-x-2">
+                                <UserAvatar :src="user.picture" size="small" />
+                                <div>
+                                    <p>{{ user.name }}</p>
+                                    <p class="text-gray-400">
+                                        ({{ user.userName }})
+                                    </p>
+                                </div>
+                            </div>
+
+                            <button class="w-10 h-10 bg-gray-200 rounded-lg" @click.prevent="removeFromHistory(user)">
+                                <div class="i-heroicons-outline-x text-gray-500 w-6 h-6 mx-auto" />
+                            </button>
+                        </NuxtLink>
+                    </div>
                 </div>
             </ClientOnly>
         </div>
 
-        <ClientOnly>
-            <div v-if="history.length">
-                <p>Your search history:</p>
-                <NuxtLink v-for="user in history" :key="`history-${user.id}`" :to="`/services/${user.id}`" class="mt-10">
-                    <div class="flex space-x-2">
-                        <UserAvatar :src="user.picture" size="small" />
-                        <p>{{ user.name }} ({{ user.userName }})</p>
-                        <button class="border-1 border-dark-800 w-5 h-5" @click.prevent="removeFromHistory(user)">
-                            X
-                        </button>
-                    </div>
-                </NuxtLink>
-            </div>
-        </ClientOnly>
-    </div>
+        <Modal :open="open" @confirm="deleteHistory()" @close="open = false" />
+    </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
@@ -63,7 +109,8 @@
     const client = useSupabaseClient();
     const me = useSupabaseUser();
     const loading = ref(false);
-    const { history, addToHistory, removeFromHistory } = useHistory();
+    const open = ref(false);
+    const { history, addToHistory, removeFromHistory, deleteHistory } = useHistory();
     const { result, currentPage, totalItems, pages, prev, next } = usePagination(results, 5);
 
     const search = async (term: string) => {
@@ -95,6 +142,10 @@
         results.value = [];
         results.value.push(...data.value);
         alreadySearched.value = true;
+    };
+
+    const cleanAll = () => {
+        open.value = true;
     };
 
     watch(kw, (newVal) => {

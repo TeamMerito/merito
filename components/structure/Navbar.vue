@@ -6,14 +6,10 @@
             </NuxtLink>
 
             <ul class="flex items-center space-x-2 text-sm font-medium text-gray-500">
-                <li class="hidden lg:block">
-                    <NuxtLink class="px-3 py-2 rounded-lg" href="/">
-                        Home
-                    </NuxtLink>
-                </li>
-
                 <li>
-                    <a class="px-3 py-2 rounded-lg" href=""> Projects </a>
+                    <NuxtLink to="/search" class="px-3 py-2 rounded-lg">
+                        Search
+                    </NuxtLink>
                 </li>
 
                 <li>
@@ -24,10 +20,10 @@
                         <template #back>
                             <template v-if="user">
                                 <NuxtLink to="/profile" class="block transition-opacity rounded-full hover:opacity-90 focus:(outline-none opacity-75)">
-                                    <div class="i-fa-solid-user w-5 h-5" />
+                                    <div class="i-heroicons-outline-user w-5 h-5" />
                                 </NuxtLink>
                                 <button class="block transition-opacity rounded-full hover:opacity-90 focus:(outline-none opacity-75)" @click="logout()">
-                                    <div class="i-fa-solid-times w-6 h-6" />
+                                    <div class="i-heroicons-outline-x w-5 h-5" />
                                 </button>
                             </template>
                             <button v-else class="block transition-opacity rounded-full hover:opacity-90 focus:(outline-none opacity-75)" @click="login('google')">

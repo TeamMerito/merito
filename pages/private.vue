@@ -1,8 +1,7 @@
 <template>
-    <div class="container space-y-5">
-        <p>Page is private. Need login.</p>
-        <NuxtLink to="/">
-            Go to home
-        </NuxtLink>
+    <div container>
+        <btn el="a" class="text-white bg-orange-500">
+            Test
+        </btn>
     </div>
 </template>

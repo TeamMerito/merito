@@ -1,57 +1,71 @@
 <template>
-    <div container>
-        <article class="bg-white border-2 border-gray-100 rounded-xl">
+    <NuxtLayout name="contained">
+        <p class="text-3xl font-heading">
+            My profile
+        </p>
+        <article class="bg-white border-2 border-gray-100 rounded-xl mt-10">
             <div class="flex items-start p-6">
                 <div class="shrink-0">
                     <UserAvatar :src="user.user_metadata.picture" size="medium" />
                 </div>
 
                 <div class="ml-4">
-                    <p class="font-medium sm:text-lg">
-                        {{ statistics.name }}
-                    </p>
+                    <div class="flex font-medium sm:text-lg items-center space-x-2">
+                        <p>{{ statistics.name }}</p>
+
+                        <span class="hidden sm:block sm:text-xs sm:text-gray-500">
+                            ({{ statistics.username }})
+                        </span>
+                    </div>
 
                     <p class="text-sm text-gray-700 line-clamp-2">
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Accusamus,
-                        accusantium temporibus iure delectus ut totam natus nesciunt ex?
-                        Ducimus, enim.
-                    </p>
-
-                    <span class="hidden sm:block" aria-hidden="true">&middot;</span>
-
-                    <p class="hidden sm:block sm:text-xs sm:text-gray-500">
-                        {{ statistics.username }}
+                        {{ statistics.email }}
                     </p>
                 </div>
             </div>
+
+            <ul class="border border-white sm:grid sm:grid-cols-2 lg:grid-cols-3">
+                <li class="p-8 border border-white">
+                    <p class="text-3xl font-extrabold ml-2">
+                        {{ getScore(statistics.averageRating) }}
+                    </p>
+                    <div class="mt-1 text-xl font-medium">
+                        <StarRating :stars="statistics.averageRating" :static="true" />
+                        <p class="mt-1 text-xs text-gray-500 pl-2">
+                            Based on {{ statistics.totalRatings }} ratings
+                        </p>
+                    </div>
+                </li>
+
+                <li class="p-8 border border-white">
+                    <p class="text-3xl font-extrabold">
+                        {{ ratings.length }}
+                    </p>
+                    <p class="mt-1 text-xl font-medium">
+                        People rated
+                    </p>
+                </li>
+
+                <li class="p-8 border border-white">
+                    <p class="text-3xl font-extrabold">
+                        Good
+                    </p>
+                    <p class="mt-1 text-xl font-medium">
+                        Mostly good ratings
+                    </p>
+                </li>
+            </ul>
 
             <div class="flex justify-end">
                 <strong
-                    class="-mr-[2px] -mb-[2px] inline-flex items-center gap-2 rounded-tl-xl rounded-br-xl bg-green-600 py-1.5 px-3 text-white"
+                    class="-mr-[2px] -mb-[2px] inline-flex items-center gap-2 rounded-tl-xl rounded-br-xl bg-green-100 py-1.5 px-3 text-green-600"
                 >
-                    <div class="i-fa-solid-user w-3 h-3" />
-                    <span class="text-[10px] font-medium sm:text-xs">Text</span>
+                    <div class="i-heroicons-outline-trending-up w-5 h-5" />
+                    <span class="text-[10px] font-medium sm:text-sm">Rising</span>
                 </strong>
             </div>
         </article>
-
-        <div class="mt-2 sm:flex sm:items-center sm:gap-2">
-            <div class="flex items-center space-x-4 mt-4">
-                <p class="text-3xl font-medium">
-                    {{ statistics.averageRating }}
-                    <span class="sr-only"> Average review score </span>
-                </p>
-
-                <div class="space-y-1">
-                    <StarRating :stars="statistics.averageRating" :static="true" />
-
-                    <p class="mt-1 text-xs text-gray-500 pl-2">
-                        Based on {{ statistics.totalRatings }} ratings
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
+    </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
@@ -85,4 +99,13 @@
             };
         }
     });
+
+    const { data: ratings } = await useAsyncData("ratings", async () => {
+        const { data } = await client.from("ratings").select("id, serviceId (name), stars").eq("userId", user.value!.id);
+        return data;
+    });
+
+    const getScore = (num: number) => {
+        return (Math.round(num * 100) / 100).toFixed(1);
+    };
 </script>
