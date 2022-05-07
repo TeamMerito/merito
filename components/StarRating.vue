@@ -1,15 +1,15 @@
 <template>
     <div class="star-rating flex">
-        <label v-for="star in maxStars" :key="`star-${star}`" class="cursor-pointer p-2" @click="select(star)" @mouseover="starOver(star)" @mouseout="starOut()">
-            <input v-model="val" class="hidden" type="radio" :value="star" :disabled="props.disabled">
-            <div class="i-fa-solid-star w-5 h-5 transition-colors" :class="val >= star ? 'text-yellow-300' : 'text-gray-400'" />
+        <label v-for="star in maxStars" :key="`star-${star}`" class="p-2" :class="props.static ? 'cursor-default' : 'cursor-pointer'" @click.once="select(star)" @mouseover="starOver(star)" @mouseout="starOut()">
+            <input v-model="val" class="hidden" type="radio" :value="star" :disabled="props.static">
+            <div class="i-fa-solid-star w-5 h-5 transition-colors" :class="val >= star ? 'text-yellow-400' : 'text-gray-400'" />
         </label>
     </div>
 </template>
 
 <script lang="ts" setup>
     const props = defineProps({
-        value: {
+        stars: {
             type: Number,
             required: false,
             default: 0
@@ -24,8 +24,8 @@
     const emit = defineEmits(["selected"]);
     const maxStars = 5;
 
-    const val = ref(props.value);
-    let oldVal = props.value;
+    const val = ref(props.stars);
+    let oldVal = props.stars;
 
     const starOver = (index: number) => {
         if (!props.static) {

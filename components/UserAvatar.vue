@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img alt="User avatar" :src="props.src" :class="getAvatarSize(props.size)">
+        <img :alt="user.user_metadata.name" :src="props.src" class="rounded-full object-cover" :class="getAvatarSize(props.size)" referrerpolicy="no-referrer">
     </div>
 </template>
 
@@ -16,13 +16,14 @@
             required: true
         }
     });
+    const user = useSupabaseUser();
 
     const getAvatarSize = (size: string): string => {
         if (size === "small")
-            return "w-8 h-8 rounded-full";
+            return "w-8 h-8";
         if (size === "medium")
-            return "w-12 h-12 rounded-full";
+            return "w-12 h-12";
 
-        return "w-16 h-16 rounded-full";
+        return "w-16 h-16";
     };
 </script>

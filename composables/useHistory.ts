@@ -20,6 +20,7 @@ export const useHistory = () => {
 
     const deleteHistory = () => {
         localStorage.removeItem("history");
+        getHistory();
     };
 
     onMounted(() => {

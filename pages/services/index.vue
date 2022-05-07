@@ -5,8 +5,9 @@
 
         <div class="mt-7">
             <ClientOnly>
+                ({{ totalItems }} found)
                 <div class="flex flex-col space-y-3">
-                    <NuxtLink v-for="serv in results" :key="serv.id" :to="`/services/${serv.id}`" class="mt-10">
+                    <NuxtLink v-for="serv in result" :key="serv.id" :to="`/services/${serv.id}`" class="mt-10">
                         {{ serv.name }} {{ serv.averageRating !== null ? `(${serv.averageRating} stars)` : '- not rated yet' }}
                     </NuxtLink>
                 </div>
@@ -14,7 +15,21 @@
                     No results found
                 </div>
 
-                <pre>{{ pagination }}</pre>
+                <div class="inline-flex justify-center space-x-1">
+                    <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="currentPage !== 1 ? prev() : ''">
+                        <div class="i-fa-solid-chevron-left w-3 h-3 text-dark" />
+                    </button>
+
+                    <div class="inline-flex w-8 h-8 leading-8 mx-auto text-white bg-blue-600 border-blue-600 rounded">
+                        {{ currentPage }}
+                    </div>
+
+                    <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="currentPage !== pages ? next() : ''">
+                        <div class="i-fa-solid-chevron-right w-3 h-3 text-dark" />
+                    </button>
+
+                    Page {{ currentPage }} of {{ pages }}
+                </div>
             </ClientOnly>
         </div>
 
@@ -31,7 +46,7 @@
     const results = ref<RatedService[]>([]);
     const kw = useDebouncedRef("", 300);
     const alreadySearched = ref(false);
-    const pagination = computed(() => useArrayPagination(results, { pageSize: 10 }));
+    const { result, currentPage, totalItems, pages, prev, next } = usePagination(results, 5);
 
     const updateServices = (newServices: RatedService[]): void => {
         results.value = [];

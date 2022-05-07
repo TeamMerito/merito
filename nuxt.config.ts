@@ -1,5 +1,6 @@
 import { defineNuxtConfig } from "nuxt";
-import transformerDirective from "@unocss/transformer-directives";
+import transformerDirectives from "@unocss/transformer-directives";
+import transformerVariantGroup from "@unocss/transformer-variant-group";
 
 export default defineNuxtConfig({
     modules: ["@vueuse/nuxt", "@nuxtjs/supabase", "@unocss/nuxt"],
@@ -9,34 +10,39 @@ export default defineNuxtConfig({
         }
     },
     unocss: {
-        wind: true,
-        icons: true,
+        uno: true,
         preflight: true,
         attributify: true,
+        icons: true,
+        typography: true,
         shortcuts: [
             ["btn", "whitespace-nowrap items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium"]
         ],
         theme: {
-            colors: {
-                accent: "#FB8500"
-            },
             breakpoints: {
                 sm: "576px",
                 md: "768px",
                 lg: "992px",
                 xl: "1200px",
                 xxl: "1400px",
-                ultrawide: "2000px"
+                uw: "2000px"
             }
         },
         webFonts: {
             fonts: {
-                heading: "Montserrat",
-                sans: "Inter"
+                heading: {
+                    name: "Montserrat",
+                    weights: ["400", "700"]
+                },
+                sans: {
+                    name: "DM Sans",
+                    weights: ["400", "700"]
+                }
             }
         },
         transformers: [
-            transformerDirective()
+            transformerDirectives(),
+            transformerVariantGroup()
         ]
     },
     meta: {
