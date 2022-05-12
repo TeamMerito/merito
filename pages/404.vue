@@ -1,5 +1,8 @@
 <template>
     <NuxtLayout name="contained">
+        <Head>
+            <Title>404 - Not found</Title>
+        </Head>
         <div class="relative p-8 text-center border border-gray-200 rounded-lg">
             <h1 class="text-5xl font-medium mb-5">
                 404

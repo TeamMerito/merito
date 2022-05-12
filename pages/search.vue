@@ -1,19 +1,25 @@
 <template>
     <NuxtLayout name="contained">
+        <Head>
+            <Title>Search</Title>
+        </Head>
+
+        <StructureBreadcrumbs />
+
         <div class="max-w-3xl mx-auto">
             <div class="relative">
-                <label class="sr-only" for="username"> Username </label>
+                <label class="sr-only" for="name"> Name </label>
 
                 <span class="absolute text-gray-500 -translate-y-1/2 pointer-events-none top-1/2 left-4">
                     <div class="i-heroicons-outline-at-symbol w-5 h-5" />
                 </span>
 
                 <input
-                    id="username"
+                    id="name"
                     v-model="kw"
                     class="w-full py-3 pl-12 pr-3 text-sm border-2 border-gray-200 rounded"
                     type="text"
-                    placeholder="Username"
+                    placeholder="Name"
                 >
             </div>
 
@@ -28,9 +34,6 @@
                             <UserAvatar :src="user.picture" size="small" />
                             <div>
                                 <p>{{ user.name }}</p>
-                                <p class="text-gray-400">
-                                    ({{ user.userName }})
-                                </p>
                             </div>
                         </div>
 
@@ -68,33 +71,47 @@
                             Your search history
                         </p>
 
-                        <button class="px-4 py-2 text-sm font-medium text-orange-600 rounded bg-orange-50" @click="cleanAll()">
+                        <button class="px-4 py-2 text-sm font-medium text-orange-600 rounded bg-orange-50" @click="open = true">
                             Clean all
                         </button>
                     </div>
 
-                    <div v-for="user in history" :key="`history-${user.id}`">
-                        <NuxtLink :to="`/services/${user.id}`" class="flex items-center justify-between p-4 text-sm font-medium transition-colors border border-gray-100 rounded-lg shadow-sm cursor-pointer hover:bg-gray-50" @click="addToHistory(user)">
+                    <div v-for="user in history" :key="`history-${user.id}`" class="flex items-center space-x-3">
+                        <NuxtLink :to="`/services/${user.id}`" class="flex flex-1 items-center justify-between p-4 text-sm font-medium transition-colors border border-gray-100 rounded-lg shadow-sm cursor-pointer hover:bg-gray-50" @click="addToHistory(user)">
                             <div class="flex items-center space-x-2">
                                 <UserAvatar :src="user.picture" size="small" />
                                 <div>
                                     <p>{{ user.name }}</p>
-                                    <p class="text-gray-400">
-                                        ({{ user.userName }})
-                                    </p>
                                 </div>
                             </div>
-
-                            <button class="w-10 h-10 bg-gray-200 rounded-lg" @click.prevent="removeFromHistory(user)">
-                                <div class="i-heroicons-outline-x text-gray-500 w-6 h-6 mx-auto" />
-                            </button>
                         </NuxtLink>
+
+                        <button class="w-10 h-10 bg-gray-200 rounded-lg" @click="removeFromHistory(user.id)">
+                            <div class="i-heroicons-outline-x text-gray-500 w-6 h-6 mx-auto" />
+                        </button>
                     </div>
                 </div>
             </ClientOnly>
         </div>
 
-        <Modal :open="open" @confirm="deleteHistory()" @close="open = false" />
+        <Modal :open="open" @confirm="deleteHistory()" @close="open = false">
+            <h2 class="text-lg font-bold">
+                Delete all history?
+            </h2>
+
+            <p class="mt-2 text-sm text-gray-500">
+                The action cannot be undone.
+            </p>
+
+            <div class="flex items-center justify-end mt-8 text-xs">
+                <button type="button" class="px-4 py-2 font-medium text-orange-600 rounded bg-orange-50" @click="deleteHistory(); open = false">
+                    Yes, I'm sure
+                </button>
+                <button type="button" class="px-4 py-2 ml-2 font-medium text-gray-600 rounded bg-gray-50" @click="open = false">
+                    No, go back
+                </button>
+            </div>
+        </Modal>
     </NuxtLayout>
 </template>
 
@@ -105,47 +122,39 @@
 
     const alreadySearched = ref(false);
     const kw = useDebouncedRef("", 300);
-    const results = ref<FullUser[]>([]);
+    const results = ref<User[]>([]);
     const client = useSupabaseClient();
     const me = useSupabaseUser();
-    const loading = ref(false);
     const open = ref(false);
     const { history, addToHistory, removeFromHistory, deleteHistory } = useHistory();
     const { result, currentPage, totalItems, pages, prev, next } = usePagination(results, 5);
 
     const search = async (term: string) => {
-        const { data, pending } = await useAsyncData(`search-${term}`, async (): Promise<FullUser[]> => {
-            const { data, error } = await client.from("users").select("id, name, picture, email").ilike("email", `%${term}%`).limit(100);
+        const { data } = await useAsyncData(`search-${term}`, async (): Promise<User[]> => {
+            const { data, error } = await client.from("users").select("id, name, picture, email").ilike("name", `%${term}%`).limit(100);
 
             if (error) {
                 console.error("error searching user: ", error);
-                return [] as FullUser[];
+                return [] as User[];
             }
 
             return data;
         }, {
             server: false,
             transform: (data) => {
-                return data.map((user: FullUser) => {
+                return data.map((user: User) => {
                     return {
                         id: user.id,
                         name: user.name,
                         picture: user.picture,
-                        email: user.email,
-                        userName: user.email?.split("@")[0]
+                        email: user.email
                     };
                 });
             }
         });
-
-        loading.value = pending.value;
         results.value = [];
         results.value.push(...data.value);
         alreadySearched.value = true;
-    };
-
-    const cleanAll = () => {
-        open.value = true;
     };
 
     watch(kw, (newVal) => {

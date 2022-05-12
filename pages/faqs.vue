@@ -1,5 +1,11 @@
 <template>
     <NuxtLayout name="contained">
+        <Head>
+            <Title>FAQs</Title>
+        </Head>
+
+        <StructureBreadcrumbs />
+
         <div class="space-y-4">
             <div v-for="(question, index) in questions" :key="index">
                 <details class="p-6 rounded-lg bg-gray-50 group">

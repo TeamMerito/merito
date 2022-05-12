@@ -1,35 +1,22 @@
 export const useHistory = () => {
-    const history = ref<FullUser[]>([]);
+    const history = useLocalStorage<User[]>("search-history", []);
 
-    const getHistory = () => {
-        history.value = JSON.parse(localStorage.getItem("history") ?? "[]");
-    };
-
-    const addToHistory = (user: FullUser) => {
-        if (!history.value.some((u: FullUser) => u.id === user.id)) {
+    const addToHistory = (user: User) => {
+        if (!history.value.some((u: User) => u.id === user.id)) {
             history.value.push(user);
-            localStorage.setItem("history", JSON.stringify(history.value));
-            getHistory();
         }
     };
 
-    const removeFromHistory = (user: FullUser) => {
-        localStorage.setItem("history", JSON.stringify(history.value.filter((u: FullUser) => u.id !== user.id)));
-        getHistory();
-    };
-
     const deleteHistory = () => {
-        localStorage.removeItem("history");
-        getHistory();
+        history.value = [];
     };
 
-    onMounted(() => {
-        getHistory();
-    });
+    const removeFromHistory = (userId: String) => {
+        history.value = history.value.filter((user: User) => user.id !== userId);
+    };
 
     return {
         history,
-        getHistory,
         addToHistory,
         removeFromHistory,
         deleteHistory
