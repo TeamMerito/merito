@@ -1,9 +1,11 @@
 export default defineNuxtRouteMiddleware(() => {
     const user = useSupabaseUser();
+    const validEmails = ["spadari.nicola@gmail.com", "benji98.bm@gmail.com", "alessiolibardi@gmail.com"];
 
-    const isAdmin = user.value && (user.value.email === "spadari.nicola@gmail.com" || user.value.email === "alessiolibardi@gmail.com" || user.value.email === "benjaminarski@gmail.com");
-
-    if (!isAdmin) {
-        return navigateTo("/private");
+    if (!user.value) {
+        return navigateTo("/login");
+    }
+    if (!validEmails.includes(user.value.user_metadata.email)) {
+        return navigateTo("/login");
     }
 });

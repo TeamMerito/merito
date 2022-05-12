@@ -1,33 +1,60 @@
 <template>
     <NuxtLayout name="contained">
-        <p class="text-3xl font-heading">
-            My profile
-        </p>
-        <article class="bg-white border-2 border-gray-100 rounded-xl mt-10">
-            <div class="flex items-start p-6">
-                <div class="shrink-0">
-                    <UserAvatar :src="user.user_metadata.picture" size="medium" />
-                </div>
+        <Head>
+            <Title v-if="user">
+                {{ user.user_metadata.name }}'s profile
+            </Title>
+            <Title v-else>
+                Profile
+            </Title>
+        </Head>
 
-                <div class="ml-4">
-                    <div class="flex font-medium sm:text-lg items-center space-x-2">
-                        <p>{{ statistics.name }}</p>
+        <StructureBreadcrumbs />
 
-                        <span class="hidden sm:block sm:text-xs sm:text-gray-500">
-                            ({{ statistics.username }})
-                        </span>
+        <article v-if="user" class="border-2 border-gray-100 rounded-xl mt-10">
+            <div class="flex flex-col space-y-4 lg:(flex-row space-y-0) justify-between p-6">
+                <div class="flex items-start">
+                    <div class="shrink-0">
+                        <UserAvatar :src="user.user_metadata.picture !== '' ? user.user_metadata.picture : 'empty'" size="medium" />
                     </div>
 
-                    <p class="text-sm text-gray-700 line-clamp-2">
-                        {{ statistics.email }}
-                    </p>
+                    <div class="ml-4">
+                        <div class="flex font-medium sm:text-lg items-center space-x-2">
+                            <p class="truncate">
+                                {{ user.user_metadata.name }}
+                            </p>
+                        </div>
+
+                        <p class="text-sm text-gray-700 truncate">
+                            {{ user.user_metadata.email }}
+                        </p>
+                    </div>
+                </div>
+                <div>
+                    <div class="inline-flex items-center -space-x-px text-xs rounded-md">
+                        <button
+                            class="px-5 py-3 font-medium border rounded-l-md hover:z-10 focus:outline-none hover:bg-gray-50 active:opacity-75"
+                            type="button"
+                            @click="open = true"
+                        >
+                            Edit
+                        </button>
+
+                        <button
+                            class="px-5 py-3 font-medium border rounded-r-md hover:z-10 focus:outline-none hover:bg-gray-50 active:opacity-75"
+                            type="button"
+                            @click="logout()"
+                        >
+                            Logout
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <ul class="border border-white sm:grid sm:grid-cols-2 lg:grid-cols-3">
-                <li class="p-8 border border-white">
+            <ul class="sm:grid sm:grid-cols-2 lg:grid-cols-3">
+                <li class="p-8">
                     <p class="text-3xl font-extrabold ml-2">
-                        {{ getScore(statistics.averageRating) }}
+                        {{ statistics.averageRating }}
                     </p>
                     <div class="mt-1 text-xl font-medium">
                         <StarRating :stars="statistics.averageRating" :static="true" />
@@ -37,7 +64,7 @@
                     </div>
                 </li>
 
-                <li class="p-8 border border-white">
+                <li class="p-8">
                     <p class="text-3xl font-extrabold">
                         {{ ratings.length }}
                     </p>
@@ -46,7 +73,7 @@
                     </p>
                 </li>
 
-                <li class="p-8 border border-white">
+                <li class="p-8">
                     <p class="text-3xl font-extrabold">
                         Good
                     </p>
@@ -73,26 +100,24 @@
         middleware: ["auth"]
     });
 
+    const { userLogout } = useAuth();
     const user = useSupabaseUser();
     const client = useSupabaseClient();
+    const router = useRouter();
+    const open = ref(false);
 
     const { data: statistics } = await useAsyncData("profile", async () => {
-        try {
-            const { data, error } = await client.from("services").select("name, ratings(userId, stars)").eq("id", user.value!.id).single();
-            if (error) {
-                throwError(error.message);
-            }
-            return data;
-        } catch (e) {
-            console.error("Can't get user statistics", e);
+        const { data, error } = await client.from("services").select("name, ratings(userId, created_at, stars)").eq("id", user.value!.id).single();
+        if (error) {
+            console.error("Can't get user statistics", error);
             return null;
         }
+        return data;
     }, {
         transform: (data) => {
             return {
                 name: data.name,
                 email: user.value!.email,
-                username: user.value!.email?.split("@")[0],
                 ratings: data.ratings,
                 averageRating: useAverage(data.ratings.map((rating: Rating) => rating.stars)),
                 totalRatings: data.ratings.length
@@ -101,11 +126,21 @@
     });
 
     const { data: ratings } = await useAsyncData("ratings", async () => {
-        const { data } = await client.from("ratings").select("id, serviceId (name), stars").eq("userId", user.value!.id);
+        const { data, error } = await client.from("ratings").select("id, serviceId (name), stars").eq("userId", user.value!.id);
+        if (error) {
+            console.error("Can't get ratings", error);
+            return null;
+        }
         return data;
     });
 
-    const getScore = (num: number) => {
-        return (Math.round(num * 100) / 100).toFixed(1);
+    const logout = async () => {
+        const { error, message } = await userLogout();
+
+        if (error) {
+            console.error(`Can't logout: ${message}`);
+        } else {
+            router.push("/");
+        }
     };
 </script>

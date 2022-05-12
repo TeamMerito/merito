@@ -5,5 +5,16 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": true
 	},
-	"eslint.validate": ["javascript", "typescript", "vue", "html", "json", "svg"],
+    "eslint.validate": [
+        "javascript",
+        "typescript",
+        "vue",
+        "html",
+        "json",
+        "svg"
+    ],
+    "[typescript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "typescript.tsdk": "node_modules\\typescript\\lib",
 }

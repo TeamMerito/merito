@@ -16,7 +16,8 @@ export default defineNuxtConfig({
         icons: true,
         typography: true,
         shortcuts: [
-            ["btn", "whitespace-nowrap items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium"]
+            ["btn-accent", "whitespace-nowrap block px-7 py-3 font-medium text-white bg-orange-500 rounded-lg shadow-xl hover:bg-orange-600"],
+            ["btn-pill", "rounded-full"]
         ],
         theme: {
             breakpoints: {
@@ -45,19 +46,26 @@ export default defineNuxtConfig({
             transformerVariantGroup()
         ]
     },
-    meta: {
-        title: "Merito",
-        meta: [
-            { charset: "utf-8" },
-            { name: "viewport", content: "width=device-width, initial-scale=1" },
-            { name: "theme-color", content: "#ffffff" },
-            { name: "format-detection", content: "no" }
-        ],
-        link: [
-            { rel: "shortcut-icon", href: "/favicon.png" }
-        ],
-        htmlAttrs: {
-            lang: "en"
+    app: {
+        head: {
+            charset: "utf-8",
+            viewport: "width=device-width, initial-scale=1",
+            meta: [
+                { name: "format-detection", content: "no" },
+                { name: "msapplication-TileColor", content: "#ffffff" },
+                { name: "theme-color", content: "#ffffff" }
+            ],
+            link: [
+                { rel: "shortcut-icon", href: "/favicon.png" },
+                { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+                { rel: "icon", type: "image/png", href: "/favicon-32x32.png" },
+                { rel: "icon", type: "image/png", href: "/favicon-16x16.png" },
+                { rel: "manifest", href: "/site.webmanifest" },
+                { rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#e7712e" }
+            ],
+            htmlAttrs: {
+                lang: "en"
+            }
         }
     },
     runtimeConfig: {

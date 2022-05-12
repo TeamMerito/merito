@@ -7,14 +7,6 @@ const UserSchema = z.object({
     picture: z.string()
 });
 
-const FullUserSchema = z.object({
-    id: z.string(),
-    name: z.string(),
-    email: z.string(),
-    picture: z.string(),
-    userName: z.string()
-});
-
 const ServiceSchema = z.object({
     id: z.string(),
     type: z.string(),
@@ -40,14 +32,14 @@ const RatedServiceSchema = z.object({
             stars: z.number()
         })
     ),
-    averageRating: z.number(),
+    averageRating: z.string(),
     totalRatings: z.number()
 });
 
 declare global {
     type User = z.infer<typeof UserSchema>;
-    type FullUser = z.infer<typeof FullUserSchema>;
     type Service = z.infer<typeof ServiceSchema>;
     type Rating = z.infer<typeof RatingSchema>;
     type RatedService = z.infer<typeof RatedServiceSchema>;
+    type Provider = "google" | "facebook" | "twitter" | "github" | "discord" | "spotify";
 }

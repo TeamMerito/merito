@@ -1,5 +1,9 @@
 <template>
-    <div class="container">
+    <NuxtLayout name="contained">
+        <Head>
+            <Title>Services</Title>
+        </Head>
+
         <p>Search service:</p>
         <input v-model="kw" type="text" class="border-1 border-dark-800" placeholder="search for service">
 
@@ -34,12 +38,12 @@
         </div>
 
         <NewService />
-    </div>
+    </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
     definePageMeta({
-        middleware: ["auth"]
+        middleware: ["auth", "admin"]
     });
 
     const client = useSupabaseClient();
