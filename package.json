@@ -7,25 +7,25 @@
         "dev": "nuxt dev",
         "generate": "nuxt generate",
         "preview": "nuxt preview",
-        "lint": "eslint --fix --ext .js,.ts,.json,.vue,.svg ."
+        "lint": "eslint --fix --ext .js,.ts,.json,.vue ."
     },
     "dependencies": {
-        "@vueuse/core": "^8.4.2",
+        "@vueuse/core": "^8.5.0",
         "uuid": "^8.3.2",
-        "zod": "^3.15.1"
+        "zod": "^3.17.2"
     },
     "devDependencies": {
         "@antfu/eslint-config": "^0.23.0",
         "@iconify-json/fa-brands": "^1.1.1",
         "@iconify-json/fa-solid": "^1.1.1",
         "@iconify-json/heroicons-outline": "^1.1.1",
-        "@nuxtjs/supabase": "^0.1.11",
+        "@nuxtjs/supabase": "^0.1.14",
         "@types/uuid": "^8.3.4",
-        "@unocss/nuxt": "^0.32.13",
-        "@vueuse/nuxt": "^8.4.2",
+        "@unocss/nuxt": "^0.34.0",
+        "@vueuse/nuxt": "^8.5.0",
         "date-fns": "^2.28.0",
-        "eslint": "^8.15.0",
-        "nuxt": "3.0.0-rc.2",
-        "sass": "^1.51.0"
+        "eslint": "^8.16.0",
+        "nuxt": "3.0.0-rc.3",
+        "sass": "^1.52.1"
     }
 }
