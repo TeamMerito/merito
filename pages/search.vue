@@ -6,31 +6,31 @@
 
         <StructureBreadcrumbs />
 
-        <div class="max-w-3xl mx-auto">
+        <div class="mx-auto max-w-3xl">
             <div class="relative">
                 <label class="sr-only" for="name"> Name </label>
 
-                <span class="absolute text-gray-500 -translate-y-1/2 pointer-events-none top-1/2 left-4">
-                    <div class="i-heroicons-outline-at-symbol w-5 h-5" />
+                <span class="top-1/2 left-4 text-gray-500 -translate-y-1/2 absolute pointer-events-none">
+                    <div class="h-5 w-5 i-heroicons-outline-at-symbol" />
                 </span>
 
                 <input
                     id="name"
                     v-model="kw"
-                    class="w-full py-3 pl-12 pr-3 text-sm border-2 border-gray-200 rounded"
+                    class="rounded border-2 border-gray-200 text-sm w-full py-3 pr-3 pl-12"
                     type="text"
                     placeholder="Name"
                 >
             </div>
 
-            <p v-if="alreadySearched && kw.value !== ''" class="text-right mt-3 mb-1">
+            <p v-if="alreadySearched && kw.value !== ''" class="mt-3 text-right mb-1">
                 {{ totalItems }} results found
             </p>
 
             <div class="space-y-1">
                 <div v-for="user in result" :key="user.id">
-                    <NuxtLink :to="user.id === me.id ? '/profile' : `/services/${user.id}`" class="flex items-center justify-between p-4 text-sm font-medium transition-colors border border-gray-100 rounded-lg shadow-sm cursor-pointer hover:bg-gray-50" @click="addToHistory(user)">
-                        <div class="flex items-center space-x-2">
+                    <NuxtLink :to="user.id === me.id ? '/profile' : `/services/${user.id}`" class="border rounded-lg cursor-pointer flex font-medium border-gray-100 shadow-sm text-sm p-4 transition-colors items-center justify-between hover:bg-gray-50" @click="addToHistory(user)">
+                        <div class="flex space-x-2 items-center">
                             <UserAvatar :src="user.picture" size="small" />
                             <div>
                                 <p>{{ user.name }}</p>
@@ -38,17 +38,17 @@
                         </div>
 
                         <span>
-                            <div class="i-heroicons-outline-arrow-narrow-right text-gray-500 w-6 h-6" />
+                            <div class="h-6 text-gray-500 w-6 i-heroicons-outline-arrow-narrow-right" />
                         </span>
                     </NuxtLink>
                 </div>
             </div>
 
-            <div v-if="pages !== 0" class="flex justify-center mt-7">
+            <div v-if="pages !== 0" class="flex mt-7 justify-center">
                 <ClientOnly>
-                    <div class="inline-flex items-center justify-center space-x-3">
-                        <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="prev()">
-                            <div class="i-heroicons-outline-chevron-left w-3 h-3" />
+                    <div class="space-x-3 inline-flex items-center justify-center">
+                        <button class="border rounded border-gray-100 h-8 w-8 inline-flex items-center justify-center" @click="prev()">
+                            <div class="h-3 w-3 i-heroicons-outline-chevron-left" />
                         </button>
 
                         <p class="text-xs">
@@ -57,8 +57,8 @@
                             {{ pages }}
                         </p>
 
-                        <button class="inline-flex items-center justify-center w-8 h-8 border border-gray-100 rounded" @click="next()">
-                            <div class="i-heroicons-outline-chevron-right w-3 h-3" />
+                        <button class="border rounded border-gray-100 h-8 w-8 inline-flex items-center justify-center" @click="next()">
+                            <div class="h-3 w-3 i-heroicons-outline-chevron-right" />
                         </button>
                     </div>
                 </ClientOnly>
@@ -66,19 +66,19 @@
 
             <ClientOnly>
                 <div v-if="history.length">
-                    <div class="flex justify-between mt-5 mb-3 px-1">
+                    <div class="flex mt-5 mb-3 px-1 justify-between">
                         <p>
                             Your search history
                         </p>
 
-                        <button class="px-4 py-2 text-sm font-medium text-orange-600 rounded bg-orange-50" @click="open = true">
+                        <button class="rounded font-medium bg-orange-50 text-sm py-2 px-4 text-orange-600" @click="open = true">
                             Clean all
                         </button>
                     </div>
 
-                    <div v-for="user in history" :key="`history-${user.id}`" class="flex items-center space-x-3">
-                        <NuxtLink :to="`/services/${user.id}`" class="flex flex-1 items-center justify-between p-4 text-sm font-medium transition-colors border border-gray-100 rounded-lg shadow-sm cursor-pointer hover:bg-gray-50" @click="addToHistory(user)">
-                            <div class="flex items-center space-x-2">
+                    <div v-for="user in history" :key="`history-${user.id}`" class="flex space-x-3 items-center">
+                        <NuxtLink :to="`/services/${user.id}`" class="border rounded-lg cursor-pointer flex font-medium border-gray-100 flex-1 shadow-sm text-sm p-4 transition-colors items-center justify-between hover:bg-gray-50" @click="addToHistory(user)">
+                            <div class="flex space-x-2 items-center">
                                 <UserAvatar :src="user.picture" size="small" />
                                 <div>
                                     <p>{{ user.name }}</p>
@@ -86,8 +86,8 @@
                             </div>
                         </NuxtLink>
 
-                        <button class="w-10 h-10 bg-gray-200 rounded-lg" @click="removeFromHistory(user.id)">
-                            <div class="i-heroicons-outline-x text-gray-500 w-6 h-6 mx-auto" />
+                        <button class="rounded-lg bg-gray-200 h-10 w-10" @click="removeFromHistory(user.id)">
+                            <div class="mx-auto h-6 text-gray-500 w-6 i-heroicons-outline-x" />
                         </button>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
         </div>
 
         <Modal :open="open" @confirm="deleteHistory()" @close="open = false">
-            <h2 class="text-lg font-bold">
+            <h2 class="font-bold text-lg">
                 Delete all history?
             </h2>
 
@@ -103,11 +103,11 @@
                 The action cannot be undone.
             </p>
 
-            <div class="flex items-center justify-end mt-8 text-xs">
-                <button type="button" class="px-4 py-2 font-medium text-orange-600 rounded bg-orange-50" @click="deleteHistory(); open = false">
+            <div class="flex mt-8 text-xs items-center justify-end">
+                <button type="button" class="rounded font-medium bg-orange-50 py-2 px-4 text-orange-600" @click="deleteHistory(); open = false">
                     Yes, I'm sure
                 </button>
-                <button type="button" class="px-4 py-2 ml-2 font-medium text-gray-600 rounded bg-gray-50" @click="open = false">
+                <button type="button" class="rounded font-medium bg-gray-50 ml-2 py-2 px-4 text-gray-600" @click="open = false">
                     No, go back
                 </button>
             </div>
